@@ -1,0 +1,64 @@
+buildscript {
+    ext{
+        lombokVersion = "1.18.12"
+        feignVersion = "10.9"
+        jacksonVersion = "2.10.3"
+    }
+}
+
+plugins {
+    id 'java'
+    id "com.github.johnrengelman.shadow" version "5.2.0" // make jar file with dependencies
+    id "application" // start app from gradle
+}
+
+group 'mcorp'
+version '0.0.1'
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    implementation 'io.github.mail-ru-im:bot-api:1.1'
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    // logging
+    implementation "org.apache.logging.log4j:log4j-core:2.13.1"
+    implementation "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}"
+    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+    implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonVersion}"
+    // junit
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.6.1"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.6.1"
+    // jaxb
+    implementation "javax.xml.bind:jaxb-api:2.4.0-b180830.0359"
+    implementation "com.sun.xml.bind:jaxb-impl:2.4.0-b180830.0438"
+    implementation "com.sun.istack:istack-commons-runtime:3.0.9"
+    // feign client
+    implementation "io.github.openfeign:feign-core:${feignVersion}"
+    implementation "io.github.openfeign:feign-jaxb:${feignVersion}"
+    implementation "io.github.openfeign:feign-jackson:${feignVersion}"
+}
+
+jar {
+    dependsOn shadowJar
+}
+
+application {
+    mainClassName = "mcorp.Application"
+}
+
+test{
+    jvmArgs(['--enable-preview'])
+    useJUnitPlatform()
+    dependsOn 'cleanTest'
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs += ['--enable-preview']
+}

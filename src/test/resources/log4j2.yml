@@ -1,0 +1,37 @@
+Configuration:
+  status: error
+  name: PropertiesConfig
+
+  appenders:
+    RollingFile:
+      -
+        name: app
+        fileName: applogsTest/icqBot.log
+        filePattern: "applogsTest/archive/icqBot-%d{MM-dd-yy}-%i.log.gz"
+        PatternLayout:
+          pattern: "[%d{ISO8601}][%mdc{sessionId}][%t][%1p][%c{1}][%m]%n"
+        Policies:
+          TimeBasedTriggeringPolicy:
+            interval: 1
+            modulate: true
+          SizeBasedTriggeringPolicy:
+            size: 500 MB
+        DefaultRollOverStrategy:
+          max: 30
+
+
+
+  Loggers:
+    logger:
+      -
+        name: app
+        level: trace
+        additivity: false
+        AppenderRef:
+          ref: app
+      -
+        name: root
+        level: info
+        additivity: false
+        AppenderRef:
+          ref: app
