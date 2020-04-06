@@ -1,13 +1,14 @@
 package mcorp.domain.openweather;
 
-public record Coordinate(
-        Long lat,
-        Long lon) {
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
-    public Coordinate {
-    }
-
-    public Coordinate() {
-        this(null, null);
-    }
+@Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Coordinate {
+    Long lat;
+    Long lon;
 }

@@ -1,13 +1,14 @@
 package mcorp.domain.openweather;
 
-public record Wind(
-        Long speed,
-        Long deg) {
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
-    public Wind {
-    }
-
-    public Wind() {
-        this(null, null);
-    }
+@Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Wind {
+    Long speed;
+    Long deg;
 }

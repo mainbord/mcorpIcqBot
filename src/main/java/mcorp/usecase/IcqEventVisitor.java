@@ -1,7 +1,7 @@
 package mcorp.usecase;
 
 import mcorp.client.impl.ForismaticHttpClient;
-import mcorp.client.impl.OpenWeatherClient;
+import mcorp.client.impl.OpenWeatherHttpClient;
 import mcorp.client.impl.RzhunemoguHttpClient;
 import mcorp.domain.openweather.OpenWeatherResponse;
 import mcorp.domain.rzhunemogu.RzhunemoguRandomRequestType;
@@ -20,7 +20,7 @@ public class IcqEventVisitor implements EventVisitor<String, String> {
     private final BotApiClientController controller;
 
     private final RzhunemoguHttpClient rzhunemoguClient = new RzhunemoguHttpClient();
-    private final OpenWeatherClient openWeatherClient = new OpenWeatherClient();
+    private final OpenWeatherHttpClient openWeatherClient = new OpenWeatherHttpClient();
     private final ForismaticHttpClient forismaticClient = new ForismaticHttpClient();
 
     private final static Logger log = LogManager.getLogger("app");
@@ -94,14 +94,14 @@ public class IcqEventVisitor implements EventVisitor<String, String> {
         if (isNull(openWeatherClient)) return "";
         OpenWeatherResponse response = openWeatherClient.getWeather(1, "Moscow");
         StringBuilder sb = new StringBuilder();
-        sb.append(response.city().name());
+        sb.append(response.getCity().getName());
         sb.append(" ");
         sb.append("\n");
-        response.list().forEach(x -> {
-            sb.append(x.dt_txt());
+        response.getList().forEach(x -> {
+            sb.append(x.getDt_txt());
             sb.append(", ");
             sb.append("temp = ");
-            sb.append(x.main().temp());
+            sb.append(x.getMain().getTemp());
             sb.append("\n");
         });
         return sb.toString();
@@ -109,6 +109,6 @@ public class IcqEventVisitor implements EventVisitor<String, String> {
 
     private String getRandomQuotation() {
         if (isNull(forismaticClient)) return "";
-        return isNull(forismaticClient.getRandomQuotation()) ? "" : forismaticClient.getRandomQuotation().quoteText();
+        return isNull(forismaticClient.getRandomQuotation()) ? "" : forismaticClient.getRandomQuotation().getQuoteText();
     }
 }

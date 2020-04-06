@@ -1,12 +1,13 @@
 package mcorp.domain.openweather;
 
-public record Cloud(
-        Integer all) {
-    public Cloud {
-    }
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
-    public Cloud() {
-        this(null);
-    }
+@Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Cloud {
+    Integer all;
 }
-

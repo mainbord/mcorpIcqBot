@@ -1,12 +1,13 @@
 package mcorp.domain.openweather;
 
-public record Sys(
-        String pod) {
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
-    public Sys {
-    }
-
-    public Sys() {
-        this(null);
-    }
+@Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Sys {
+    String pod;
 }

@@ -1,20 +1,23 @@
 package mcorp.domain.openweather;
 
-public record City(
-        String id,
-        String name,
-        Coordinate coord,
-        String country,
-        Long population,
-        Long timezone,
-        Long sunrise,
-        Long sunset) {
-    public City {
-    }
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
-    public City() {
-        this(null, null, null, null, null, null, null, null);
-    }
-
+@Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@JsonIgnoreProperties
+public class City {
+    String id;
+    String name;
+    Coordinate coord;
+    String country;
+    Long population;
+    Long timezone;
+    Long sunrise;
+    Long sunset;
 }
-

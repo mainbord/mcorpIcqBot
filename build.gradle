@@ -1,7 +1,6 @@
 buildscript {
     ext{
         lombokVersion = "1.18.12"
-        feignVersion = "10.9"
         jacksonVersion = "2.10.3"
     }
 }
@@ -36,10 +35,6 @@ dependencies {
     implementation "javax.xml.bind:jaxb-api:2.4.0-b180830.0359"
     implementation "com.sun.xml.bind:jaxb-impl:2.4.0-b180830.0438"
     implementation "com.sun.istack:istack-commons-runtime:3.0.9"
-    // feign client
-    implementation "io.github.openfeign:feign-core:${feignVersion}"
-    implementation "io.github.openfeign:feign-jaxb:${feignVersion}"
-    implementation "io.github.openfeign:feign-jackson:${feignVersion}"
 }
 
 jar {
@@ -47,11 +42,12 @@ jar {
 }
 
 application {
+    applicationDefaultJvmArgs = ['--enable-preview', '-XX:+ShowCodeDetailsInExceptionMessages']
     mainClassName = "mcorp.Application"
 }
 
 test{
-    jvmArgs(['--enable-preview'])
+    jvmArgs('--enable-preview')
     useJUnitPlatform()
     dependsOn 'cleanTest'
     testLogging {

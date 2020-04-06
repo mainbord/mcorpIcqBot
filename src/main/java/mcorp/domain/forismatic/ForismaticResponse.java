@@ -1,15 +1,17 @@
 package mcorp.domain.forismatic;
 
-public record ForismaticResponse(
-        String quoteText,
-        String quoteAuthor,
-        String senderName,
-        String senderLink,
-        String quoteLink) {
-    public ForismaticResponse {
-    }
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
-    public ForismaticResponse() {
-        this(null, null, null, null, null);
-    }
+@Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class ForismaticResponse {
+    String quoteText;
+    String quoteAuthor;
+    String senderName;
+    String senderLink;
+    String quoteLink;
 }

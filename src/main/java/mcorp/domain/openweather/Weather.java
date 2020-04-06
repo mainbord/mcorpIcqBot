@@ -1,15 +1,16 @@
 package mcorp.domain.openweather;
 
-public record Weather(
-        Integer id,
-        String main,
-        String description,
-        String icon) {
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
-    public Weather {
-    }
-
-    public Weather() {
-        this(null, null, null, null);
-    }
+@Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Weather {
+    Integer id;
+    String main;
+    String description;
+    String icon;
 }
