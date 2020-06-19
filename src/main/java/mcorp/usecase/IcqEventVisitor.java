@@ -85,6 +85,11 @@ public class IcqEventVisitor implements EventVisitor<String, String> {
         return null;
     }
 
+    @Override
+    public String visitCallbackQuery(CallbackQueryEvent callbackQueryEvent, String s) {
+        return null;
+    }
+
     private String getRandomAnekdot() {
         if (isNull(rzhunemoguClient)) return "";
         return rzhunemoguClient.getRandomAnekdotJoke(RzhunemoguRandomRequestType.JOKE);

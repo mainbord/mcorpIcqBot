@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.github.mail-ru-im:bot-api:1.1'
+    implementation 'io.github.mail-ru-im:bot-api:1.2.0'
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
     // logging
