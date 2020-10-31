@@ -1,5 +1,6 @@
 package mcorp.usecase;
 
+import lombok.SneakyThrows;
 import mcorp.client.impl.ForismaticHttpClient;
 import mcorp.client.impl.OpenWeatherHttpClient;
 import mcorp.client.impl.RzhunemoguHttpClient;
@@ -8,12 +9,17 @@ import mcorp.domain.rzhunemogu.RzhunemoguRandomRequestType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.mail.im.botapi.BotApiClientController;
+import ru.mail.im.botapi.api.entity.InlineKeyboardButton;
+import ru.mail.im.botapi.api.entity.SendTextRequest;
 import ru.mail.im.botapi.entity.ChatAction;
 import ru.mail.im.botapi.fetcher.event.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.util.Objects.isNull;
+import static mcorp.usecase.IcqEventVisitor.Button.*;
 
 public class IcqEventVisitor implements EventVisitor<String, String> {
 
@@ -31,28 +37,52 @@ public class IcqEventVisitor implements EventVisitor<String, String> {
 
     @Override
     public String visitUnknown(UnknownEvent event, String s) {
-        return null;
+        return "Введите анекдот, цитата или погода";
     }
 
     @Override
     public String visitNewMessage(NewMessageEvent event, String s) {
+
         String chatId = event.getChat().getChatId();
-        String recivedMessage = event.getText();
+        String receivedMessage = event.getText();
         String botMessage = "";
         long messageId = 0;
         try {
-            switch (recivedMessage.toLowerCase()){
+            switch (receivedMessage.toLowerCase()) {
                 case "анекдот" -> botMessage = getRandomAnekdot();
                 case "погода" -> botMessage = getWeather();
                 case "цитата" -> botMessage = getRandomQuotation();
-                default -> botMessage = recivedMessage;
+                default -> botMessage = receivedMessage;
             }
-            controller.sendActions(chatId, ChatAction.TYPING);
-            messageId = controller.sendTextMessage(chatId, botMessage).getMsgId(); // send message
+            SendTextRequest request = new SendTextRequest();
+            request.setChatId(chatId);
+            request.setText(botMessage);
+            request.setKeyboard(getKeyBoard());
+
+            messageId = controller.sendTextMessage(request).getMsgId();
         } catch (IOException e) {
             log.error(e.getMessage());
         }
-        return "";
+        return String.valueOf(messageId);
+    }
+
+    private List<List<InlineKeyboardButton>> getKeyBoard() {
+        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+        List<InlineKeyboardButton> firstLine = new ArrayList<>();
+        keyboard.add(firstLine);
+        InlineKeyboardButton jokeButton = InlineKeyboardButton.callbackButton("Анекдот", JOKE_BUTTON.name());
+        InlineKeyboardButton quotationButton = InlineKeyboardButton.callbackButton("Цитата", QUOTATION_BUTTON.name());
+        InlineKeyboardButton weatherButton = InlineKeyboardButton.callbackButton("Погода", WEATHER_BUTTON.name());
+        firstLine.add(jokeButton);
+        firstLine.add(quotationButton);
+        firstLine.add(weatherButton);
+        return keyboard;
+    }
+
+    enum Button {
+        JOKE_BUTTON,
+        QUOTATION_BUTTON,
+        WEATHER_BUTTON
     }
 
     @Override
@@ -86,8 +116,24 @@ public class IcqEventVisitor implements EventVisitor<String, String> {
     }
 
     @Override
-    public String visitCallbackQuery(CallbackQueryEvent callbackQueryEvent, String s) {
-        return null;
+    @SneakyThrows
+    public String visitCallbackQuery(CallbackQueryEvent event, String s) {
+        Button eventType = Button.valueOf(event.getCallbackData());
+
+        SendTextRequest request = new SendTextRequest();
+        request.setChatId(event.getMessageChat().getChatId());
+
+        request.setKeyboard(getKeyBoard());
+
+        switch (eventType) {
+            case JOKE_BUTTON -> request.setText(getRandomAnekdot());
+            case QUOTATION_BUTTON -> request.setText(getRandomQuotation());
+            case WEATHER_BUTTON -> request.setText(getWeather());
+            default -> request.setText(event.getMessageText());
+        }
+        controller.sendTextMessage(request);
+
+        return "";
     }
 
     private String getRandomAnekdot() {

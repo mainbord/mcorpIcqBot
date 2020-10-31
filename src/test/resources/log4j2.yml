@@ -6,8 +6,8 @@ Configuration:
     RollingFile:
       -
         name: app
-        fileName: applogsTest/icqBot.log
-        filePattern: "applogsTest/archive/icqBot-%d{MM-dd-yy}-%i.log.gz"
+        fileName: appLogsTest/icqBot.log
+        filePattern: "appLogsTest/archive/icqBot-%d{MM-dd-yy}-%i.log.gz"
         PatternLayout:
           pattern: "[%d{ISO8601}][%mdc{sessionId}][%t][%1p][%c{1}][%m]%n"
         Policies:
