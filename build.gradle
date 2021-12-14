@@ -1,37 +1,36 @@
 buildscript {
     ext{
-        lombokVersion = "1.18.16"
-        jacksonVersion = "2.11.3"
+        lombokVersion = "1.18.22"
+        jacksonVersion = "2.13.0"
     }
 }
 
 plugins {
     id 'java'
-    id "com.github.johnrengelman.shadow" version "5.2.0" // make jar file with dependencies
+    id "com.github.johnrengelman.shadow" version "7.1.0" // make jar file with dependencies
     id "application" // start app from gradle
 }
 
 group 'mcorp'
-version '0.0.2'
+version '0.0.3'
 
 repositories {
     mavenCentral()
-    jcenter()
 }
 
 dependencies {
-    implementation 'ru.mail:bot-api:1.2.1'
+    implementation 'ru.mail.im:bot-api:1.2.2'
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
     // logging
-    implementation "org.apache.logging.log4j:log4j-core:2.13.3"
+    implementation "org.apache.logging.log4j:log4j-core:2.16.0"
     // jackson
     implementation "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}"
     implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
     implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonVersion}"
     // junit
-    testImplementation "org.junit.jupiter:junit-jupiter-api:5.6.1"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.6.1"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.8.2"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.8.2"
     // jaxb
     implementation "javax.xml.bind:jaxb-api:2.4.0-b180830.0359"
     implementation "com.sun.xml.bind:jaxb-impl:2.4.0-b180830.0438"

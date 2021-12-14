@@ -14,7 +14,7 @@ public class Application {
     private final static Logger log = LogManager.getLogger("app");
     private final static String token = AppConfig.getProperties().getProperty("token");
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         BotApiClient client = new BotApiClient(token);
         BotApiClientController controller = BotApiClientController.startBot(client);
         client.addOnEventFetchListener(new IcqEventListener(controller));

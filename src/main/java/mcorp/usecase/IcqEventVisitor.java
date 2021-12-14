@@ -70,9 +70,9 @@ public class IcqEventVisitor implements EventVisitor<String, String> {
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         List<InlineKeyboardButton> firstLine = new ArrayList<>();
         keyboard.add(firstLine);
-        InlineKeyboardButton jokeButton = InlineKeyboardButton.callbackButton("Анекдот", JOKE_BUTTON.name());
-        InlineKeyboardButton quotationButton = InlineKeyboardButton.callbackButton("Цитата", QUOTATION_BUTTON.name());
-        InlineKeyboardButton weatherButton = InlineKeyboardButton.callbackButton("Погода", WEATHER_BUTTON.name());
+        InlineKeyboardButton jokeButton = InlineKeyboardButton.callbackButton("Анекдот", JOKE_BUTTON.name(), "");
+        InlineKeyboardButton quotationButton = InlineKeyboardButton.callbackButton("Цитата", QUOTATION_BUTTON.name(), "");
+        InlineKeyboardButton weatherButton = InlineKeyboardButton.callbackButton("Погода", WEATHER_BUTTON.name(), "");
         firstLine.add(jokeButton);
         firstLine.add(quotationButton);
         firstLine.add(weatherButton);
