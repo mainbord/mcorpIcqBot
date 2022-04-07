@@ -1,32 +1,34 @@
 package mcorp.client.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.google.gson.annotations.SerializedName;
 import mcorp.UtilTest;
-import mcorp.domain.rzhunemogu.RzhunemoguRandomRequestType;
 import mcorp.domain.rzhunemogu.RzhunemoguResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
+import java.io.IOException;
 import java.io.StringReader;
 
 class RzhunemoguClientTest {
 
-    private RzhunemoguHttpClient rzhunemoguClient = new RzhunemoguHttpClient();
-
     @Test
     public void getRandomAnekdotJoke() {
-        String joke = rzhunemoguClient.getRandomAnekdotJoke(RzhunemoguRandomRequestType.JOKE);
-        System.out.println(joke);
     }
 
     @Test
-     public void jaxbTest() throws JAXBException {
-        JAXBContext jaxbContext = JAXBContext.newInstance(RzhunemoguResponse.class);
-        Unmarshaller jaxbMarshaller = jaxbContext.createUnmarshaller();
-        RzhunemoguResponse response = (RzhunemoguResponse) jaxbMarshaller.unmarshal(new StringReader(UtilTest.getTestObjectFromResources("RzhunemoguResponse.xml")));
-        Assertions.assertNotNull(response.getContent());
-        System.out.println(response.getContent());
+    public void jaxbTest() throws IOException {
+
+        JacksonXmlModule xmlModule = new JacksonXmlModule();
+        xmlModule.setDefaultUseWrapper(false);
+        XmlMapper xmlMapper = new XmlMapper(xmlModule);
+
+        StringReader stringReader = new StringReader(UtilTest.getTestObjectFromResources("RzhunemoguResponse.xml"));
+        RzhunemoguResponse rzhunemoguResponse = xmlMapper.readValue(stringReader, RzhunemoguResponse.class);
+
+        Assertions.assertNotNull(rzhunemoguResponse.getContent());
+        System.out.println(rzhunemoguResponse.getContent());
     }
 }

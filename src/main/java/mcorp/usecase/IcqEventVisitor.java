@@ -9,9 +9,9 @@ import mcorp.domain.rzhunemogu.RzhunemoguRandomRequestType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.mail.im.botapi.BotApiClientController;
+import ru.mail.im.botapi.api.entity.AnswerCallbackQueryRequest;
 import ru.mail.im.botapi.api.entity.InlineKeyboardButton;
 import ru.mail.im.botapi.api.entity.SendTextRequest;
-import ru.mail.im.botapi.entity.ChatAction;
 import ru.mail.im.botapi.fetcher.event.*;
 
 import java.io.IOException;
@@ -45,7 +45,7 @@ public class IcqEventVisitor implements EventVisitor<String, String> {
 
         String chatId = event.getChat().getChatId();
         String receivedMessage = event.getText();
-        String botMessage = "";
+        String botMessage;
         long messageId = 0;
         try {
             switch (receivedMessage.toLowerCase()) {
@@ -132,17 +132,15 @@ public class IcqEventVisitor implements EventVisitor<String, String> {
             default -> request.setText(event.getMessageText());
         }
         controller.sendTextMessage(request);
-
+        controller.answerCallbackQuery(AnswerCallbackQueryRequest.answerText(event.getQueryId(), "", false));
         return "";
     }
 
     private String getRandomAnekdot() {
-        if (isNull(rzhunemoguClient)) return "";
         return rzhunemoguClient.getRandomAnekdotJoke(RzhunemoguRandomRequestType.JOKE);
     }
 
     private String getWeather() {
-        if (isNull(openWeatherClient)) return "";
         OpenWeatherResponse response = openWeatherClient.getWeather(1, "Moscow");
         StringBuilder sb = new StringBuilder();
         sb.append(response.getCity().getName());
@@ -159,7 +157,6 @@ public class IcqEventVisitor implements EventVisitor<String, String> {
     }
 
     private String getRandomQuotation() {
-        if (isNull(forismaticClient)) return "";
         return isNull(forismaticClient.getRandomQuotation()) ? "" : forismaticClient.getRandomQuotation().getQuoteText();
     }
 }

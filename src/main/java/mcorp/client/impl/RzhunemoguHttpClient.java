@@ -1,5 +1,8 @@
 package mcorp.client.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import mcorp.client.RzhunemoguClient;
 import mcorp.config.AppConfig;
 import mcorp.domain.rzhunemogu.RzhunemoguRandomRequestType;
@@ -7,9 +10,6 @@ import mcorp.domain.rzhunemogu.RzhunemoguResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
-import java.io.StringReader;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -39,7 +39,7 @@ public class RzhunemoguHttpClient implements RzhunemoguClient {
         try {
             String uri = String.format("%s/Rand.aspx?%s=%s",
                     rzhunemoguEndpoint,
-                    "CType", String.valueOf(cType.getcType()));
+                    "CType", cType.getcType());
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(uri))
@@ -47,10 +47,13 @@ public class RzhunemoguHttpClient implements RzhunemoguClient {
                     .build();
             try {
                 HttpResponse<byte[]> response = httpClient.send(request, HttpResponse.BodyHandlers.ofByteArray());
-                JAXBContext jaxbContext = JAXBContext.newInstance(RzhunemoguResponse.class);
-                Unmarshaller jaxbMarshaller = jaxbContext.createUnmarshaller();
-                String result = new String(response.body(), "windows-1251");
-                return ofNullable(((RzhunemoguResponse) jaxbMarshaller.unmarshal(new StringReader(result))))
+
+                JacksonXmlModule xmlModule = new JacksonXmlModule();
+                xmlModule.setDefaultUseWrapper(false);
+                ObjectMapper objectMapper = new XmlMapper(xmlModule);
+                RzhunemoguResponse rzhunemoguResponse = objectMapper.readValue(new String(response.body(), "windows-1251"), RzhunemoguResponse.class);
+
+                return ofNullable(rzhunemoguResponse)
                         .orElse(new RzhunemoguResponse("")).getContent();
             } catch (Exception e) {
                 throw new RuntimeException(e);

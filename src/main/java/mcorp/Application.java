@@ -2,12 +2,10 @@ package mcorp;
 
 import mcorp.config.AppConfig;
 import mcorp.usecase.IcqEventListener;
-import ru.mail.im.botapi.BotApiClient;
-import ru.mail.im.botapi.BotApiClientController;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.io.IOException;
+import ru.mail.im.botapi.BotApiClient;
+import ru.mail.im.botapi.BotApiClientController;
 
 public class Application {
 
