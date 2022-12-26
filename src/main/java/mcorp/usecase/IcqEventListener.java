@@ -16,6 +16,12 @@ public class IcqEventListener implements OnEventFetchListener {
 
     @Override
     public void onEventFetch(List<Event> events) {
-        events.forEach(e -> e.accept(new IcqEventVisitor(controller), ""));
+        if (events != null && events.size() > 0) {
+            for (Event e: events) {
+                if (e != null) {
+                    e.accept(new IcqEventVisitor(controller), "");
+                }
+            }
+        }
     }
 }
